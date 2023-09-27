@@ -1,7 +1,7 @@
-import Sidebar from "../../components/Sidebar";
+import Sidebar from "../../components/Sidebar/Sidebar";
 
 
-import Dashboard from "../../components/Dashboard";
+import Dashboard from "../../components/Dashboard/Dashboard";
 export default function App() {
     return (
       <div className="App">

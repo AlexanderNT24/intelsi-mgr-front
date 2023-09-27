@@ -1,18 +1,13 @@
 import React from "react";
-import "../Css/Components/Sidebar.css";
-import {
-  AiOutlineDashboard,
-  AiOutlineShareAlt,
-  AiOutlineShoppingCart,
-  AiOutlineBook
-} from "react-icons/ai";
-import { GrCatalogOption } from "react-icons/gr";
-import { BsPeople } from "react-icons/bs";
+import "../../Css/Components/Sidebar.css";
+import { AiFillHome } from "react-icons/ai";
+
+
 const Sidebar = () => {
   const sidemenus = [
     {
-      menu_name: "Reportes",
-      menu_icon: AiOutlineDashboard,
+      menu_name:'Home',
+      menu_icon: AiFillHome,
       active: true
     },
   ];

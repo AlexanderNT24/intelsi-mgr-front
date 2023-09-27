@@ -44,7 +44,7 @@ const data = [
 const Analytics = () => {
   return (
     <>
-      <h1>Analytics</h1>
+      <h1>Reportes</h1>
       <BarChart
         width={500}
         height={300}
