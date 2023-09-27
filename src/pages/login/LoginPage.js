@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState } from "react"; // Importa useState desde React
+import { useNavigate } from "react-router-dom";
+
 import {
   Button,
   Form,
@@ -6,10 +8,16 @@ import {
   Label,
   Input,
 } from "reactstrap";
-import { GoogleLoginButton } from "react-social-login-buttons";
 import "./LoginPage.css"; // Puedes crear un archivo CSS para estilizar LoginPage si es necesario
 
 function LoginPage() {
+  const [isLoggedIn, setLoggedIn] = useState(false); 
+  const navigate = useNavigate(); // Obtén la función de navegación
+
+  const handleLogin = () => {
+    navigate("/home");
+  };
+
   return (
     <div className="background">
       <div className="login-box">
@@ -36,7 +44,7 @@ function LoginPage() {
                     placeholder="De 8 caracteres"
                   />
                 </FormGroup>
-                <Button className="mt-3 btn">Ingresar</Button>
+                <Button className="mt-3 btn" onClick={handleLogin}>Ingresar</Button>
               </form>
             </div>
           </div>
