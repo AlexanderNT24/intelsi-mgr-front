@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom"; // Importa Link desde React Router
 import "../../Css/Components/Sidebar.css";
-import { AiFillHome, AiOutlineOrderedList,AiOutlineLogout } from "react-icons/ai";
+import { AiFillHome, AiOutlineOrderedList,AiOutlineLogout, AiFillAlert, AiFillBook } from "react-icons/ai";
 
 const Sidebar = ({ logout }) => {
   const sidemenus = [
@@ -11,15 +11,31 @@ const Sidebar = ({ logout }) => {
       path: "/home",
     },
     {
-      menu_name: "Registrar",
+      menu_name: "Registrar Productos",
       menu_icon: AiOutlineOrderedList,
       path: "/register", 
+    },
+    {
+      menu_name:"Registrar Pedidos",
+      menu_icon:AiFillAlert,
+      path:"/request"
+    },
+    {
+      menu_name:"Registrar Proyectos",
+      menu_icon:AiFillBook,
+      path:"/projects"
+    },
+    {
+      menu_name:"Registrar Usuarios",
+      menu_icon:AiFillBook,
+      path:"/user"
     },
     {
       menu_name: "Salir",
       menu_icon: AiOutlineLogout,
       path: "/", 
     },
+
   ];
 
   return (
