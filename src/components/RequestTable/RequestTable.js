@@ -240,7 +240,7 @@ function RequestTable() {
             <Autocomplete
               id="combo-box-demo"
               options={products}
-              getOptionLabel={(option) => option.comment} // Display product comment
+              getOptionLabel={(option) => option.comment}
               sx={{ width: 300 }}
               renderInput={(params) => (
                 <TextField {...params} label="Product" />

@@ -2,71 +2,65 @@ import React, { useState, useEffect } from "react";
 import "../../Css/Components/TotalBusiness.css";
 import { BsFillStopwatchFill, BsTruck } from "react-icons/bs";
 import { ImSpinner6 } from "react-icons/im";
-import { useNavigate } from "react-router-dom";
-import axios from "axios"; // Importa axios
+import { Link } from "react-router-dom";
+import axios from "axios";
 
 const TotalBusiness = () => {
-  const [products, setProducts] = useState([]);
-  const navigate = useNavigate();
+  const [requests, setRequests] = useState([]);
 
   useEffect(() => {
-    // Realiza una llamada a la API para obtener los productos
-    axios.get("http://localhost:3001/products") // Reemplaza con la URL correcta de tu API
+    axios
+      .get("http://localhost:3001/request") // Assuming you have an endpoint for requests
       .then((response) => {
-        setProducts(response.data);
+        console.log(response.data)
+        setRequests(response.data);
       })
       .catch((error) => {
-        console.error("Error al obtener los productos", error);
+        console.error("Error while fetching requests", error);
       });
   }, []);
 
-  // Lógica para contar los productos en diferentes estados
-  const pendingCount = products.filter((product) => product.state === "pending").length;
-  const toBeCount = products.filter((product) => product.state === "to-be").length;
-  const processCount = products.filter((product) => product.state === "process").length;
+  const pendingRequests = requests.filter((request) => request.requeststatus === "por-revisar");
+  const toBePickedUpRequests = requests.filter((request) => request.requeststatus === "revisado");
+  const inProgressRequests = requests.filter((request) => request.requeststatus === "completo");
 
   const total = [
     {
-      number: pendingCount.toString(),
+      number: pendingRequests.length.toString(),
       title1: "Pendientes",
       icon: BsFillStopwatchFill,
+      link: "/pending",
     },
     {
-      number: toBeCount.toString(),
+      number: toBePickedUpRequests.length.toString(),
       title1: "Por recoger",
       icon: BsTruck,
+      link: "/to-be-picked-up",
     },
     {
-      number: processCount.toString(),
+      number: inProgressRequests.length.toString(),
       title1: "En proceso",
       icon: ImSpinner6,
+      link: "/in-progress",
     },
   ];
 
-  const handlerClickItem = () => {
-    navigate("/home");
-  };
-
   return (
-    <>
-      <div className="row_boxes">
-        {total.map((totalitems, index) => {
-          return (
-            <div className="row_boxes_inner" key={index}>
-              <div className="first">
-                <p className="number">{totalitems.number}</p>
-                <a className="title" onClick={handlerClickItem}>
-                  {totalitems.title1}
-                </a>
-              </div>
-              <div className="second">
-                <totalitems.icon />
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </>
+    <div className="row_boxes">
+      {total.map((totalitems, index) => (
+        <div className="row_boxes_inner" key={index}>
+          <div className="first">
+            <p className="number">{totalitems.number}</p>
+            <Link to={totalitems.link} className="title">
+              {totalitems.title1}
+            </Link>
+          </div>
+          <div className="second">
+            <totalitems.icon />
+          </div>
+        </div>
+      ))}
+    </div>
   );
 };
 

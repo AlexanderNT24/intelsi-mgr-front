@@ -3,7 +3,6 @@ import ReactDOM from "react-dom";
 import Board, { moveCard } from "@lourenci/react-kanban";
 import "@lourenci/react-kanban/dist/styles.css";
 
-
 const board = {
   columns: [
     {
