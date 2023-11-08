@@ -9,6 +9,8 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
 const initialUser = {
   name: '',
@@ -16,6 +18,7 @@ const initialUser = {
   last_name: '',
   email: '',
   password: '',
+  rol: '', 
   enabled: true,
 };
 
@@ -25,7 +28,7 @@ export default function UserTable() {
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    // Puedes cargar datos iniciales aquí si lo deseas.
+    // Cargar datos iniciales aquí si lo deseas.
     fetch('http://localhost:3001/user') // Cambia la URL según tu configuración de servidor
       .then((response) => response.json())
       .then((data) => setUsers(data))
@@ -97,6 +100,7 @@ export default function UserTable() {
                 <TableCell>Last Name</TableCell>
                 <TableCell>Email</TableCell>
                 <TableCell>Password</TableCell>
+                <TableCell>Rol</TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -107,6 +111,8 @@ export default function UserTable() {
                   <TableCell>{user.first_name}</TableCell>
                   <TableCell>{user.last_name}</TableCell>
                   <TableCell>{user.email}</TableCell>
+                  <TableCell>{user.password}</TableCell>
+                  <TableCell>{user.rol}</TableCell>
                   <TableCell>
                     <Button onClick={() => handleEdit(user)}>Edit</Button>
                     <Button onClick={() => handleDelete(user.id)}>Delete</Button>
@@ -124,9 +130,7 @@ export default function UserTable() {
         <TextField
           label="First Name"
           value={formData.first_name}
-          onChange={(e) =>
-            setFormData({ ...formData, first_name: e.target.value })
-          }
+          onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
         />
         <TextField
           label="Last Name"
@@ -143,6 +147,15 @@ export default function UserTable() {
           value={formData.password}
           onChange={(e) => setFormData({ ...formData, password: e.target.value })}
         />
+        <Select
+          label="Rol"
+          value={formData.rol}
+          onChange={(e) => setFormData({ ...formData, rol: e.target.value })}
+        >
+          <MenuItem value="supervisor">Supervisor</MenuItem>
+          <MenuItem value="administrador">Administrador</MenuItem>
+          <MenuItem value="solicitante">Solicitante</MenuItem>
+        </Select>
         <Button variant="contained" color="primary" onClick={handleSave}>
           {isEditing ? 'Update' : 'Add'}
         </Button>
@@ -150,4 +163,3 @@ export default function UserTable() {
     </Container>
   );
 }
-

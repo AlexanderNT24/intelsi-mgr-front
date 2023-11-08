@@ -10,14 +10,16 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
+import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 
 const styles = {
   container: {
     display: "flex",
     flexDirection: "column",
-    alignItems: "center", // Centrar horizontalmente
+    alignItems: "center",
     marginTop: "20px",
-    marginLeft: '258px'
+    marginLeft: "258px",
   },
   tableContainer: {
     maxHeight: "400px",
@@ -29,6 +31,7 @@ function RequestTable() {
   const [requests, setRequests] = useState([]);
   const [formData, setFormData] = useState({});
   const [isEditing, setIsEditing] = useState(false);
+  const [products, setProducts] = useState([]);
 
   const fetchRequests = async () => {
     try {
@@ -43,6 +46,23 @@ function RequestTable() {
       console.error("Error al obtener solicitudes:", error);
     }
   };
+  const fetchProd = async () => {
+    try {
+      const response = await fetch("http://localhost:3001/products"); // Asegúrate de que la URL sea correcta
+      if (response.ok) {
+        const data = await response.json();
+        setProducts(data);
+      } else {
+        console.error("Error al obtener solicitudes:", response.status);
+      }
+    } catch (error) {
+      console.error("Error al obtener solicitudes:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProd();
+  }, []);
 
   useEffect(() => {
     fetchRequests();
@@ -117,6 +137,11 @@ function RequestTable() {
     }
   };
 
+  function formatDateString(dateString) {
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  }
+
   return (
     <Container>
       <Paper elevation={3} style={styles.container}>
@@ -140,13 +165,20 @@ function RequestTable() {
                 <TableBody>
                   {requests.map((request) => (
                     <TableRow key={request.id}>
-                      <TableCell>{request.dateRequest}</TableCell>
-                      <TableCell>{request.dateShipment}</TableCell>
-                      <TableCell>{request.requestStatus}</TableCell>
-                      <TableCell>{request.price}</TableCell>
-                      <TableCell>{request.idProducto}</TableCell>
                       <TableCell>
-                        <Button onClick={() => handleEdit(request)}>Editar</Button>
+                        {formatDateString(request.daterequest)}
+                      </TableCell>
+                      <TableCell>
+                        {formatDateString(request.dateshipment)}
+                      </TableCell>
+                      <TableCell>{request.requeststatus}</TableCell>
+                      <TableCell>{request.price}</TableCell>
+                      <TableCell>{request.idproducto}</TableCell>
+                      <TableCell>{request.idproducto}</TableCell>
+                      <TableCell>
+                        <Button onClick={() => handleEdit(request)}>
+                          Editar
+                        </Button>
                         <Button onClick={() => handleDelete(request.id)}>
                           Eliminar
                         </Button>
@@ -179,14 +211,24 @@ function RequestTable() {
               }
             />
 
-            <TextField
-              label="Estado de solicitud"
-              type="text"
-              value={formData.requestStatus || ""}
-              onChange={(e) =>
-                setFormData({ ...formData, requestStatus: e.target.value })
-              }
-            />
+            <FormControl sx={{ width: 300 }}>
+              <InputLabel htmlFor="request-status">
+                Estado de solicitud
+              </InputLabel>
+              <Select
+                label="Estado de solicitud"
+                id="request-status"
+                value={formData.requestStatus || ""}
+                onChange={(e) =>
+                  setFormData({ ...formData, requestStatus: e.target.value })
+                }
+              >
+                <MenuItem value="por-revisar">Por Revisar</MenuItem>
+                <MenuItem value="revisado">Revisado</MenuItem>
+                <MenuItem value="completo">Completo</MenuItem>
+              </Select>
+            </FormControl>
+            
             <TextField
               label="Precio"
               type="number"
@@ -195,14 +237,27 @@ function RequestTable() {
                 setFormData({ ...formData, price: e.target.value })
               }
             />
-            <TextField
-              label="ID del Producto"
-              type="text"
-              value={formData.idProducto || ""}
-              onChange={(e) =>
-                setFormData({ ...formData, idProducto: e.target.value })
+            <Autocomplete
+              id="combo-box-demo"
+              options={products}
+              getOptionLabel={(option) => option.comment} // Display product comment
+              sx={{ width: 300 }}
+              renderInput={(params) => (
+                <TextField {...params} label="Product" />
+              )}
+              value={
+                products.find(
+                  (product) => product.product_id === formData.idProducto
+                ) || null
               }
+              onChange={(event, newValue) => {
+                setFormData({
+                  ...formData,
+                  idProducto: newValue ? newValue.product_id : "",
+                });
+              }}
             />
+
             <Button variant="contained" color="primary" onClick={handleSave}>
               {isEditing ? "Actualizar" : "Agregar"}
             </Button>

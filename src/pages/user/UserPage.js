@@ -1,6 +1,6 @@
 import React from "react";
 import Sidebar from "../../components/Sidebar/Sidebar";
-import UserTable from "../../components/Users/UserTable"
+import UserTable from "../../components/UsersTable/UserTable"
 
 function UserTablePage() {
   return (

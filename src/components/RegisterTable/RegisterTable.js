@@ -19,6 +19,15 @@ import Save from "@mui/icons-material/Save";
 import Search from "@mui/icons-material/Search";
 import ViewList from "@mui/icons-material/ViewList";
 import { forwardRef } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles((theme) => ({
+  tableContainer: {
+    padding: '20px',
+    marginTop: '20px',
+    marginLeft: '258px',
+  },
+}));
 
 const tableIcons = {
   Add: forwardRef((props, ref) => <Add {...props} ref={ref} />),
@@ -41,32 +50,23 @@ const tableIcons = {
   Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
   SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
   ThirdStateCheck: forwardRef((props, ref) => <Close {...props} ref={ref} />),
-  ViewColumn: forwardRef((props, ref) => <ViewList {...props} ref={ref} />)
+  ViewColumn: forwardRef((props, ref) => <ViewList {...props} ref={ref} />),
 };
 
 const api = axios.create({
-  baseURL: `http://localhost:3001` // Reemplaza con la URL de tu API de productos
+  baseURL: `http://localhost:3001`,
 });
 
-function validateEmail(email) {
-  const re = /^((?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\]))$/;
-  return re.test(String(email).toLowerCase());
-}
-
 function RegisterTable() {
-  const [data, setData] = useState([]); // Datos de la tabla
-
-  // Para manejar errores
+  const [data, setData] = useState([]);
   const [iserror, setIserror] = useState(false);
   const [errorMessages, setErrorMessages] = useState([]);
+  const classes = useStyles(); // Aplicando estilos Material-UI
 
   useEffect(() => {
-    // Obtener los datos de productos desde tu API cuando se carga la página
-    console.log('useeffect')
     api
-      .get("/products") // Reemplaza con el endpoint correcto para obtener productos
+      .get("/products")
       .then((res) => {
-        console.log(res.data);
         setData(res.data);
       })
       .catch((error) => {
@@ -83,9 +83,8 @@ function RegisterTable() {
     { title: "Estado", field: "state" },
     { title: "Ubicación", field: "location" },
     { title: "Categoría ID", field: "category_id" },
-    { title: "Marca ID", field: "brand_id" }
+    { title: "Marca ID", field: "brand_id" },
   ];
-  
 
   const handleRowUpdate = (newData, oldData, resolve) => {
     // Validación y actualización de un producto existente
@@ -120,7 +119,9 @@ function RegisterTable() {
         setIserror(false);
       })
       .catch(() => {
-        setErrorMessages(["No se pudo agregar el producto. ¡Error del servidor!"]);
+        setErrorMessages([
+          "No se pudo agregar el producto. ¡Error del servidor!",
+        ]);
         setIserror(true);
         resolve();
       });
@@ -139,19 +140,19 @@ function RegisterTable() {
         resolve();
       })
       .catch(() => {
-        setErrorMessages(["No se pudo eliminar el producto. ¡Error del servidor!"]);
+        setErrorMessages([
+          "No se pudo eliminar el producto. ¡Error del servidor!",
+        ]);
         setIserror(true);
         resolve();
       });
   };
-  
-
   return (
-<div className="App">
-      <Grid container spacing={1}>
+    <div className="App">
+      <Grid container spacing={1}  style={{marginLeft:"30px"}}>
         <Grid item xs={3} />
         <Grid item xs={7}>
-          <div>
+          <div className={classes.tableContainer}>
             {iserror && (
               <Alert severity="error">
                 {errorMessages.map((msg, i) => {
@@ -167,17 +168,17 @@ function RegisterTable() {
             icons={tableIcons}
             editable={{
               onRowUpdate: (newData, oldData) =>
-                new Promise(resolve => {
+                new Promise((resolve) => {
                   handleRowUpdate(newData, oldData, resolve);
                 }),
-              onRowAdd: newData =>
-                new Promise(resolve => {
+              onRowAdd: (newData) =>
+                new Promise((resolve) => {
                   handleRowAdd(newData, resolve);
                 }),
-              onRowDelete: oldData =>
-                new Promise(resolve => {
+              onRowDelete: (oldData) =>
+                new Promise((resolve) => {
                   handleRowDelete(oldData, resolve);
-                })
+                }),
             }}
           />
         </Grid>
