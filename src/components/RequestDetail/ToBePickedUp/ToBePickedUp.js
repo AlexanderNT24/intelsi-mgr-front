@@ -6,18 +6,21 @@ const ToBePickedUp = () => {
   const [requests, setRequests] = useState([]);
   const [editedRequest, setEditedRequest] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
-
+  const userId = localStorage.getItem("id");
+  
   useEffect(() => {
+    // Asegúrate de que el servidor tiene un endpoint que maneje las solicitudes por supervisor_id
     axios
-      .get("http://localhost:3001/request")
+      .get(`http://localhost:3001/request/supervisor/${userId}`)
       .then((response) => {
         const revisadoRequests = response.data.filter((request) => request.requeststatus === "listo");
         setRequests(revisadoRequests);
       })
       .catch((error) => {
-        console.error("Error while fetching revisado requests", error);
+        console.error("Error while fetching requests", error);
       });
-  }, []);
+  }, [userId]);
+
 
   const handleEditRequest = (request) => {
     setEditedRequest(request);

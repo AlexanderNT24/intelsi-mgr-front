@@ -4,18 +4,21 @@ import { Container, List, ListItem, ListItemText, Button } from "@mui/material";
 
 const PendingRequests = () => {
   const [requests, setRequests] = useState([]);
-
+  const userId = localStorage.getItem("id");
+  
   useEffect(() => {
+    // Asegúrate de que el servidor tiene un endpoint que maneje las solicitudes por supervisor_id
     axios
-      .get("http://localhost:3001/request")
+      .get(`http://localhost:3001/request/supervisor/${userId}`)
       .then((response) => {
         const pendingRequests = response.data.filter((request) => request.requeststatus === "pendiente");
         setRequests(pendingRequests);
       })
       .catch((error) => {
-        console.error("Error while fetching pending requests", error);
+        console.error("Error while fetching requests", error);
       });
-  }, []);
+  }, [userId]);
+
 
   const handleUpdateRequest = (request) => {
     axios
