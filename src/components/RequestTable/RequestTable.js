@@ -223,9 +223,9 @@ function RequestTable() {
                   setFormData({ ...formData, requestStatus: e.target.value })
                 }
               >
-                <MenuItem value="por-revisar">Por Revisar</MenuItem>
-                <MenuItem value="revisado">Revisado</MenuItem>
-                <MenuItem value="completo">Completo</MenuItem>
+                <MenuItem value="pendiente">Pendiente</MenuItem>
+                <MenuItem value="listo">Listo</MenuItem>
+                <MenuItem value="enviado">Enviado</MenuItem>
               </Select>
             </FormControl>
             

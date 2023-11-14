@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Container, List, ListItem, ListItemText, Button, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
+import { Container, List, ListItem, ListItemText, Button } from "@mui/material";
 
 const PendingRequests = () => {
   const [requests, setRequests] = useState([]);
-  const [editedRequest, setEditedRequest] = useState(null);
-  const [openDialog, setOpenDialog] = useState(false);
 
   useEffect(() => {
     axios
       .get("http://localhost:3001/request")
       .then((response) => {
-        const pendingRequests = response.data.filter((request) => request.requeststatus === "por-revisar");
+        const pendingRequests = response.data.filter((request) => request.requeststatus === "pendiente");
         setRequests(pendingRequests);
       })
       .catch((error) => {
@@ -19,57 +17,31 @@ const PendingRequests = () => {
       });
   }, []);
 
-  const handleEditRequest = (request) => {
-    setEditedRequest(request);
-    setOpenDialog(true);
-  };
-
-  const handleUpdateRequest = () => {
+  const handleUpdateRequest = (request) => {
     axios
-      .put(`http://localhost:3001/request/${editedRequest.id}`, {
+      .put(`http://localhost:3001/request/${request.id}`, {
         requeststatus: "revisado",
-        // Add other updated fields as needed
+        // Agregar otros campos actualizados según sea necesario
       })
       .then(() => {
-        setRequests((prevRequests) => prevRequests.filter((request) => request.id !== editedRequest.id));
-        setEditedRequest(null);
-        setOpenDialog(false);
+        setRequests((prevRequests) => prevRequests.filter((req) => req.id !== request.id));
       })
       .catch((error) => {
         console.error("Error updating the request", error);
       });
   };
 
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-  };
-
   return (
-    <Container style={{marginLeft:'250px'}}>
+    <Container style={{ marginLeft: '250px' }}>
       <h2>Pending Requests (Por-Revisar)</h2>
       <List>
         {requests.map((request) => (
-          <ListItem key={request.id}>
+          <ListItem key={request.id} style={{ border: '1px solid #ccc', marginBottom: '10px', borderRadius: '5px' }}>
             <ListItemText primary={`Request ID: ${request.id}`} secondary={`Price: $${request.price}`} />
-            <Button onClick={() => handleEditRequest(request)}>Edit</Button>
+            <Button variant="contained" color="primary" onClick={() => handleUpdateRequest(request)}>Mark as Revisado</Button>
           </ListItem>
         ))}
       </List>
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>Edit Request</DialogTitle>
-        <DialogContent>
-          <p>Request ID: {editedRequest && editedRequest.id}</p>
-          {/* Display other request fields for editing */}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleUpdateRequest} color="primary">
-            Mark as Revisado
-          </Button>
-          <Button onClick={handleCloseDialog} color="primary">
-            Cancel
-          </Button>
-        </DialogActions>
-      </Dialog>
     </Container>
   );
 };

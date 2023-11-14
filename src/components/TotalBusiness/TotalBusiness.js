@@ -20,9 +20,9 @@ const TotalBusiness = () => {
       });
   }, []);
 
-  const pendingRequests = requests.filter((request) => request.requeststatus === "por-revisar");
-  const toBePickedUpRequests = requests.filter((request) => request.requeststatus === "revisado");
-  const inProgressRequests = requests.filter((request) => request.requeststatus === "completo");
+  const pendingRequests = requests.filter((request) => request.requeststatus === "pendiente");
+  const toBePickedUpRequests = requests.filter((request) => request.requeststatus === "listo");
+  const inProgressRequests = requests.filter((request) => request.requeststatus === "enviado");
 
   const total = [
     {
@@ -33,14 +33,14 @@ const TotalBusiness = () => {
     },
     {
       number: toBePickedUpRequests.length.toString(),
-      title1: "Por recoger",
-      icon: BsTruck,
+      title1: "Listos",
+      icon: ImSpinner6,
       link: "/to-be-picked-up",
     },
     {
       number: inProgressRequests.length.toString(),
-      title1: "En proceso",
-      icon: ImSpinner6,
+      title1: "Enviados",
+      icon: BsTruck,
       link: "/in-progress",
     },
   ];

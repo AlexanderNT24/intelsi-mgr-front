@@ -8,6 +8,8 @@ import {
   AiFillAlert,
   AiFillBook,
 } from "react-icons/ai";
+import Avatar from "@mui/material/Avatar";
+import { grey } from '@mui/material/colors';
 
 const Sidebar = ({ logout }) => {
   // Define el valor del rol almacenado en localStorage
@@ -35,9 +37,9 @@ const Sidebar = ({ logout }) => {
       path: "/projects",
     },
     {
-      menu_name:"Registrar Usuarios",
-      menu_icon:AiFillBook,
-      path:"/user"
+      menu_name: "Registrar Usuarios",
+      menu_icon: AiFillBook,
+      path: "/user",
     },
     {
       menu_name: "Salir",
@@ -54,19 +56,19 @@ const Sidebar = ({ logout }) => {
       return (
         value.path === "/register" ||
         value.path === "/request" ||
-        value.path === "/projects"||
+        value.path === "/home" ||
         value.path === "/"
-      ); 
-    } else if (userRole === "solicitante") {
-      return (value.path === "/request"||
-      value.path === "/"); 
+      );
+    } else if (userRole === "logistica") {
+      return value.path === "/request" || value.path === "/";
     }
-    return false; 
+    return false;
   });
 
   return (
     <div className="sidebar">
       <div className="brand">IntelsiMGR</div>
+   
       <div className="links">
         <ul>
           {filteredSidemenus.map((value, index) => (
@@ -77,6 +79,27 @@ const Sidebar = ({ logout }) => {
             </li>
           ))}
         </ul>
+      </div>
+      <div
+          className="brand"
+          style={{
+            fontSize: '20px',
+            display: 'flex',
+            alignItems: 'center',
+            position: 'absolute',
+            bottom: 0,
+            marginTop:'30px',
+            marginLeft:'40px'
+          }}
+      >
+        {userRole && (
+          <>
+            <Avatar sx={{ bgcolor: grey[500], marginRight: "8px" }}>
+              {}
+            </Avatar>
+            {userRole.charAt(0).toUpperCase() + userRole.slice(1)}
+          </>
+        )}
       </div>
     </div>
   );

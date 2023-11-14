@@ -11,11 +11,11 @@ const InProgress = () => {
     axios
       .get("http://localhost:3001/request")
       .then((response) => {
-        const completoRequests = response.data.filter((request) => request.requeststatus === "completo");
-        setRequests(completoRequests);
+        const inProgressRequests = response.data.filter((request) => request.requeststatus === "enviado");
+        setRequests(inProgressRequests);
       })
       .catch((error) => {
-        console.error("Error while fetching completo requests", error);
+        console.error("Error while fetching in-progress requests", error);
       });
   }, []);
 
@@ -27,10 +27,11 @@ const InProgress = () => {
   const handleUpdateRequest = () => {
     axios
       .put(`http://localhost:3001/request/${editedRequest.id}`, {
-        requeststatus: "revisado", 
+        requeststatus: "revisado",
+        // Agregar otros campos actualizados según sea necesario
       })
       .then(() => {
-        setRequests((prevRequests) => prevRequests.filter((request) => request.id !== editedRequest.id));
+        setRequests((prevRequests) => prevRequests.filter((req) => req.id !== editedRequest.id));
         setEditedRequest(null);
         setOpenDialog(false);
       })
@@ -44,31 +45,16 @@ const InProgress = () => {
   };
 
   return (
-    <Container style={{marginLeft:'250px'}}>
-      <h2>Completo Requests</h2>
+    <Container style={{ marginLeft: '250px' }}>
+      <h2>In Progress Requests</h2>
       <List>
         {requests.map((request) => (
-          <ListItem key={request.id}>
+          <ListItem key={request.id} style={{ border: '1px solid #ccc', marginBottom: '10px', borderRadius: '5px' }}>
             <ListItemText primary={`Request ID: ${request.id}`} secondary={`Price: $${request.price}`} />
-            <Button onClick={() => handleEditRequest(request)}>Edit</Button>
+            <Button variant="contained" color="primary" onClick={() => handleUpdateRequest(request)}>Mark as Revisado</Button>
           </ListItem>
         ))}
       </List>
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>Edit Request</DialogTitle>
-        <DialogContent>
-          <p>Request ID: {editedRequest && editedRequest.id}</p>
-          {/* Mostrar otros campos de la solicitud para su edición */}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleUpdateRequest} color="primary">
-            Mark as Revisado
-          </Button>
-          <Button onClick={handleCloseDialog} color="primary">
-            Cancel
-          </Button>
-        </DialogActions>
-      </Dialog>
     </Container>
   );
 };

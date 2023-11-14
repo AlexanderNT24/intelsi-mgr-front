@@ -152,9 +152,9 @@ export default function UserTable() {
           value={formData.rol}
           onChange={(e) => setFormData({ ...formData, rol: e.target.value })}
         >
-          <MenuItem value="supervisor">Supervisor</MenuItem>
           <MenuItem value="administrador">Administrador</MenuItem>
-          <MenuItem value="solicitante">Solicitante</MenuItem>
+          <MenuItem value="supervisor">Supervisor</MenuItem>
+          <MenuItem value="logistica">Logistica</MenuItem>
         </Select>
         <Button variant="contained" color="primary" onClick={handleSave}>
           {isEditing ? 'Update' : 'Add'}

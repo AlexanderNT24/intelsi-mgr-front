@@ -11,7 +11,7 @@ const ToBePickedUp = () => {
     axios
       .get("http://localhost:3001/request")
       .then((response) => {
-        const revisadoRequests = response.data.filter((request) => request.requeststatus === "revisado");
+        const revisadoRequests = response.data.filter((request) => request.requeststatus === "listo");
         setRequests(revisadoRequests);
       })
       .catch((error) => {
