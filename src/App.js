@@ -10,6 +10,8 @@ import UserPage from "./pages/user/UserPage";
 import PendingRequestsPage from "./pages/pending/PendingPage";
 import ToBePickedUpPage from "./pages/to-be-picked-up/ToBePickedUpPage";
 import InProgressPage from "./pages/in-progress/InProgressPage";
+import LogisticHomePage from "./pages/logistic-home/LogisticHomePage";
+import UserDetailPage from "./pages/user-detail/UserDetailPage";
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/home" element={<HomePage />} />
+        <Route path="/logistic-home" element={<LogisticHomePage />} />
+        <Route path="/user-detail/:id" element={<UserDetailPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/detail" element={<StateDetailPage />} />
         <Route path="/request" element={<RequestPage />} />

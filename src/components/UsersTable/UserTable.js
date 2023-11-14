@@ -87,25 +87,27 @@ export default function UserTable() {
       .catch((error) => console.error('Error al eliminar usuario:', error));
   };
 
-  return (
-    <Container maxWidth="lg">
-      <Paper elevation={3} style={{ padding: '20px', marginTop: '20px', marginLeft: '258px' }}>
-        <h2>User Table</h2>
-        <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>First Name</TableCell>
-                <TableCell>Last Name</TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell>Password</TableCell>
-                <TableCell>Rol</TableCell>
-                <TableCell>Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {users.map((user) => (
+  
+return (
+  <Container maxWidth="lg">
+    <Paper elevation={3} style={{ padding: '20px', marginTop: '20px', marginLeft: '258px' }}>
+      <h2>User Table</h2>
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>First Name</TableCell>
+              <TableCell>Last Name</TableCell>
+              <TableCell>Email</TableCell>
+              <TableCell>Password</TableCell>
+              <TableCell>Rol</TableCell>
+              <TableCell>Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {Array.isArray(users) && users.length > 0 ? (
+              users.map((user) => (
                 <TableRow key={user.id}>
                   <TableCell>{user.name}</TableCell>
                   <TableCell>{user.first_name}</TableCell>
@@ -118,11 +120,16 @@ export default function UserTable() {
                     <Button onClick={() => handleDelete(user.id)}>Delete</Button>
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TextField
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={7}>No users available.</TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <TextField
           label="Name"
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -154,12 +161,14 @@ export default function UserTable() {
         >
           <MenuItem value="administrador">Administrador</MenuItem>
           <MenuItem value="supervisor">Supervisor</MenuItem>
-          <MenuItem value="logistica">Logistica</MenuItem>
+          <MenuItem value="logisticaa">Logistica</MenuItem>
         </Select>
         <Button variant="contained" color="primary" onClick={handleSave}>
           {isEditing ? 'Update' : 'Add'}
         </Button>
-      </Paper>
-    </Container>
-  );
+    </Paper>
+  </Container>
+);
+
+
 }

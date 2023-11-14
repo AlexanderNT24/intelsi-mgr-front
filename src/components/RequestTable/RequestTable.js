@@ -32,6 +32,8 @@ function RequestTable() {
   const [formData, setFormData] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   const [products, setProducts] = useState([]);
+  const userRole = localStorage.getItem("role");
+  const userId = localStorage.getItem("id");
 
   const fetchRequests = async () => {
     try {
@@ -83,7 +85,11 @@ function RequestTable() {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(formData),
+            body: JSON.stringify({
+              ...formData,
+              supervisorStatus: "revisado",
+              supervisor_id: userId,
+            }),
           });
 
           if (response.ok) {
@@ -97,7 +103,11 @@ function RequestTable() {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(formData),
+            body: JSON.stringify({
+              ...formData,
+              supervisorStatus: "revisado",
+              supervisor_id: userId,
+            }),
           });
 
           if (response.ok) {
@@ -143,128 +153,129 @@ function RequestTable() {
   }
 
   return (
-    <Container>
-      <Paper elevation={3} style={styles.container}>
-        <Grid container spacing={3}>
-          <Grid item xs={12}>
-            <h2>Tabla de Pedidos</h2>
-          </Grid>
-          <Grid item xs={12} sm={12}>
-            <TableContainer style={{ maxHeight: "400px", overflow: "auto" }}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Fecha de solicitud</TableCell>
-                    <TableCell>Fecha de envío</TableCell>
-                    <TableCell>Estado de solicitud</TableCell>
-                    <TableCell>Precio</TableCell>
-                    <TableCell>ID del Producto</TableCell>
-                    <TableCell>Acciones</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {requests.map((request) => (
-                    <TableRow key={request.id}>
-                      <TableCell>
-                        {formatDateString(request.daterequest)}
-                      </TableCell>
-                      <TableCell>
-                        {formatDateString(request.dateshipment)}
-                      </TableCell>
-                      <TableCell>{request.requeststatus}</TableCell>
-                      <TableCell>{request.price}</TableCell>
-                      <TableCell>{request.idproducto}</TableCell>
-                      <TableCell>{request.idproducto}</TableCell>
-                      <TableCell>
-                        <Button onClick={() => handleEdit(request)}>
-                          Editar
-                        </Button>
-                        <Button onClick={() => handleDelete(request.id)}>
-                          Eliminar
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Grid>
-          <Grid item xs={12} sm={12}>
-            <TextField
-              type="date"
-              value={formData.dateRequest || ""}
-              InputLabelProps={{
-                shrink: formData.dateRequest ? true : false,
-              }}
-              onChange={(e) =>
-                setFormData({ ...formData, dateRequest: e.target.value })
-              }
-            />
-            <TextField
-              type="date"
-              value={formData.dateShipment || ""}
-              InputLabelProps={{
-                shrink: formData.dateShipment ? true : false,
-              }}
-              onChange={(e) =>
-                setFormData({ ...formData, dateShipment: e.target.value })
-              }
-            />
-
-            <FormControl sx={{ width: 300 }}>
-              <InputLabel htmlFor="request-status">
-                Estado de solicitud
-              </InputLabel>
-              <Select
-                label="Estado de solicitud"
-                id="request-status"
-                value={formData.requestStatus || ""}
-                onChange={(e) =>
-                  setFormData({ ...formData, requestStatus: e.target.value })
-                }
-              >
-                <MenuItem value="pendiente">Pendiente</MenuItem>
-                <MenuItem value="listo">Listo</MenuItem>
-                <MenuItem value="enviado">Enviado</MenuItem>
-              </Select>
-            </FormControl>
-            
-            <TextField
-              label="Precio"
-              type="number"
-              value={formData.price || ""}
-              onChange={(e) =>
-                setFormData({ ...formData, price: e.target.value })
-              }
-            />
-            <Autocomplete
-              id="combo-box-demo"
-              options={products}
-              getOptionLabel={(option) => option.comment}
-              sx={{ width: 300 }}
-              renderInput={(params) => (
-                <TextField {...params} label="Product" />
-              )}
-              value={
-                products.find(
-                  (product) => product.product_id === formData.idProducto
-                ) || null
-              }
-              onChange={(event, newValue) => {
-                setFormData({
-                  ...formData,
-                  idProducto: newValue ? newValue.product_id : "",
-                });
-              }}
-            />
-
-            <Button variant="contained" color="primary" onClick={handleSave}>
-              {isEditing ? "Actualizar" : "Agregar"}
-            </Button>
-          </Grid>
+    <div className="dashboard">
+      <Grid container spacing={3}>
+        <Grid item xs={12}>
+          <h2>Tabla de Pedidos</h2>
         </Grid>
-      </Paper>
-    </Container>
+        <Grid item xs={12} sm={12}>
+          <TableContainer style={{ maxHeight: "400px", overflow: "auto" }}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Fecha de solicitud</TableCell>
+                  <TableCell>Fecha de envío</TableCell>
+                  <TableCell>Estado de solicitud</TableCell>
+                  <TableCell>Cantidad</TableCell>
+                  <TableCell>ID del Producto</TableCell>
+                  <TableCell>Acciones</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {requests.map((request) => (
+                  <TableRow key={request.id}>
+                    <TableCell>
+                      {formatDateString(request.daterequest)}
+                    </TableCell>
+                    <TableCell>
+                      {formatDateString(request.dateshipment)}
+                    </TableCell>
+                    <TableCell>{request.requeststatus}</TableCell>
+                    <TableCell>{request.price}</TableCell>
+                    <TableCell>{request.idproducto}</TableCell>
+                    <TableCell>{request.idproducto}</TableCell>
+                    <TableCell>
+                      <Button onClick={() => handleEdit(request)}>
+                        Editar
+                      </Button>
+                      <Button onClick={() => handleDelete(request.id)}>
+                        Eliminar
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Grid>
+        <Grid
+          hidden={userRole !== "administrador" ? false : true}
+          item
+          xs={12}
+          sm={12}
+        >
+          <TextField
+            type="date"
+            value={formData.dateRequest || ""}
+            InputLabelProps={{
+              shrink: formData.dateRequest ? true : false,
+            }}
+            onChange={(e) =>
+              setFormData({ ...formData, dateRequest: e.target.value })
+            }
+          />
+          <TextField
+            type="date"
+            value={formData.dateShipment || ""}
+            InputLabelProps={{
+              shrink: formData.dateShipment ? true : false,
+            }}
+            onChange={(e) =>
+              setFormData({ ...formData, dateShipment: e.target.value })
+            }
+          />
+
+          <FormControl sx={{ width: 300 }}>
+            <InputLabel htmlFor="request-status">
+              Estado de solicitud
+            </InputLabel>
+            <Select
+              label="Estado de solicitud"
+              id="request-status"
+              value={formData.requestStatus || ""}
+              onChange={(e) =>
+                setFormData({ ...formData, requestStatus: e.target.value })
+              }
+            >
+              <MenuItem value="pendiente">Pendiente</MenuItem>
+              <MenuItem value="listo">Listo</MenuItem>
+              <MenuItem value="enviado">Enviado</MenuItem>
+            </Select>
+          </FormControl>
+
+          <TextField
+            label="Cantidad"
+            type="number"
+            value={formData.price || ""}
+            onChange={(e) =>
+              setFormData({ ...formData, price: e.target.value })
+            }
+          />
+          <Autocomplete
+            id="combo-box-demo"
+            options={products}
+            getOptionLabel={(option) => option.comment}
+            sx={{ width: 300 }}
+            renderInput={(params) => <TextField {...params} label="Product" />}
+            value={
+              products.find(
+                (product) => product.product_id === formData.idProducto
+              ) || null
+            }
+            onChange={(event, newValue) => {
+              setFormData({
+                ...formData,
+                idProducto: newValue ? newValue.product_id : "",
+              });
+            }}
+          />
+
+          <Button variant="contained" color="primary" onClick={handleSave}>
+            {isEditing ? "Actualizar" : "Agregar"}
+          </Button>
+        </Grid>
+      </Grid>
+    </div>
   );
 }
 

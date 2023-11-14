@@ -12,18 +12,25 @@ const TotalBusiness = () => {
     axios
       .get("http://localhost:3001/request") // Assuming you have an endpoint for requests
       .then((response) => {
-        console.log(response.data)
+        console.log(response.data);
         setRequests(response.data);
       })
       .catch((error) => {
         console.error("Error while fetching requests", error);
       });
   }, []);
-
-  const pendingRequests = requests.filter((request) => request.requeststatus === "pendiente");
-  const toBePickedUpRequests = requests.filter((request) => request.requeststatus === "listo");
-  const inProgressRequests = requests.filter((request) => request.requeststatus === "enviado");
-
+  
+  const pendingRequests = requests.filter(
+    (request) => request.requeststatus === "pendiente"
+  );
+ 
+  const toBePickedUpRequests = requests.filter(
+    (request) => request.requeststatus === "listo"
+  );
+  const inProgressRequests = requests.filter(
+    (request) => request.requeststatus === "enviado"
+  );
+ 
   const total = [
     {
       number: pendingRequests.length.toString(),
@@ -44,7 +51,7 @@ const TotalBusiness = () => {
       link: "/in-progress",
     },
   ];
-
+  
   return (
     <div className="row_boxes">
       {total.map((totalitems, index) => (

@@ -9,10 +9,9 @@ import {
   AiFillBook,
 } from "react-icons/ai";
 import Avatar from "@mui/material/Avatar";
-import { grey } from '@mui/material/colors';
+import { grey } from "@mui/material/colors";
 
 const Sidebar = ({ logout }) => {
-  // Define el valor del rol almacenado en localStorage
   const userRole = localStorage.getItem("role");
 
   const sidemenus = [
@@ -20,6 +19,11 @@ const Sidebar = ({ logout }) => {
       menu_name: "Home",
       menu_icon: AiFillHome,
       path: "/home",
+    },
+    {
+      menu_name: "Home",
+      menu_icon: AiFillHome,
+      path: "/logistic-home",
     },
     {
       menu_name: "Registrar Productos",
@@ -48,7 +52,7 @@ const Sidebar = ({ logout }) => {
     },
   ];
 
-  // Filtra los elementos del menú basados en el rol
+  
   const filteredSidemenus = sidemenus.filter((value) => {
     if (userRole === "administrador") {
       return true; // Mostrar todos los elementos para administradores
@@ -60,7 +64,11 @@ const Sidebar = ({ logout }) => {
         value.path === "/"
       );
     } else if (userRole === "logistica") {
-      return value.path === "/request" || value.path === "/";
+      return (
+        value.path === "/request" ||
+        value.path === "/" ||
+        value.path === "/logistic-home"
+      );
     }
     return false;
   });
@@ -68,7 +76,7 @@ const Sidebar = ({ logout }) => {
   return (
     <div className="sidebar">
       <div className="brand">IntelsiMGR</div>
-   
+
       <div className="links">
         <ul>
           {filteredSidemenus.map((value, index) => (
@@ -81,22 +89,20 @@ const Sidebar = ({ logout }) => {
         </ul>
       </div>
       <div
-          className="brand"
-          style={{
-            fontSize: '20px',
-            display: 'flex',
-            alignItems: 'center',
-            position: 'absolute',
-            bottom: 0,
-            marginTop:'30px',
-            marginLeft:'40px'
-          }}
+        className="brand"
+        style={{
+          fontSize: "20px",
+          display: "flex",
+          alignItems: "center",
+          position: "absolute",
+          bottom: 0,
+          marginTop: "30px",
+          marginLeft: "40px",
+        }}
       >
         {userRole && (
           <>
-            <Avatar sx={{ bgcolor: grey[500], marginRight: "8px" }}>
-              {}
-            </Avatar>
+            <Avatar sx={{ bgcolor: grey[500], marginRight: "8px" }}>{}</Avatar>
             {userRole.charAt(0).toUpperCase() + userRole.slice(1)}
           </>
         )}

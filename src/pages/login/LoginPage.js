@@ -43,6 +43,7 @@ function LoginPage() {
 
           localStorage.setItem("user", foundUser.name);
           localStorage.setItem("role", foundUser.rol);
+          localStorage.setItem("id", foundUser.id);
           if (foundUser.rol!="solicitante"){
             
           setLoggedIn(true);
