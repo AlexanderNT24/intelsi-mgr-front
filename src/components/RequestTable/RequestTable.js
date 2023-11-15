@@ -199,7 +199,7 @@ function RequestTable() {
           </TableContainer>
         </Grid>
         <Grid
-          hidden={userRole !== "administrador" ? false : true}
+          hidden={(userRole == "supervisor") ? false : true}
           item
           xs={12}
           sm={12}
