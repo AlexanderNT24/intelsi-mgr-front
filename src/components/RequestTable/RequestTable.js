@@ -185,10 +185,10 @@ function RequestTable() {
                     <TableCell>{request.idproducto}</TableCell>
                     <TableCell>{request.idproducto}</TableCell>
                     <TableCell>
-                      <Button onClick={() => handleEdit(request)}>
+                      <Button hidden={(userRole == "supervisor") ? false : true} onClick={() => handleEdit(request)}>
                         Editar
                       </Button>
-                      <Button onClick={() => handleDelete(request.id)}>
+                      <Button hidden={(userRole != "supervisor") ? false : true} onClick={() => handleDelete(request.id)}>
                         Eliminar
                       </Button>
                     </TableCell>
