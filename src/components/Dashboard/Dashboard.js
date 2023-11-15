@@ -2,7 +2,9 @@ import React from "react";
 import "../../Css/Components/Dashboard.css";
 import Analytics from "../Analytics/Analytics";
 import TotalBusiness from "../TotalBusiness/TotalBusiness";
+import StateDetail from "../../components/StateDetail/StateDetail";
 const Dashboard = () => {
+  const userId = localStorage.getItem("id");
   return (
     <>
       <div className="dashboard">
@@ -12,7 +14,7 @@ const Dashboard = () => {
             <TotalBusiness />
           </div>
           <div className="two">
-            <Analytics />
+            <StateDetail id={userId} /> 
           </div>
         </div>
       </div>

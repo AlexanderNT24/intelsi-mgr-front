@@ -5,10 +5,10 @@ import "@lourenci/react-kanban/dist/styles.css";
 import { Container, Typography } from "@mui/material";
 import axios from "axios";
 import Paper from "@mui/material/Paper";
-import UserDetail from "../UserDetail/UserDetail";
 
-const ControlledBoardWithApi = () => {
-  const { id } = useParams();
+
+const ControlledBoardWithApi = ({ id }) => {
+  
   const [controlledBoard, setControlledBoard] = useState(null);
 
   useEffect(() => {
@@ -92,19 +92,15 @@ const ControlledBoardWithApi = () => {
   
 
   return (
-    <div className="dashboard">
-      <Paper elevation={3} style={{ padding: "20px", marginTop: "20px" }}>
-      <UserDetail></UserDetail>
-      {controlledBoard ? (
-        <Board onCardDragEnd={handleCardMove} disableColumnDrag>
-          {controlledBoard}
-        </Board>
-      ) : (
-        <Typography>Loading...</Typography>
-      )}
-      </Paper>
-     
-    </div>
+    <Paper elevation={3} style={{ padding: "20px", marginTop: "20px" }}>
+    {controlledBoard ? (
+      <Board onCardDragEnd={handleCardMove} disableColumnDrag>
+        {controlledBoard}
+      </Board>
+    ) : (
+      <Typography>Loading...</Typography>
+    )}
+    </Paper>
   );
 };
 

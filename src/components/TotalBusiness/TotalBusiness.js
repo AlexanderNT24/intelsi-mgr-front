@@ -4,8 +4,10 @@ import { BsFillStopwatchFill, BsTruck } from "react-icons/bs";
 import { ImSpinner6 } from "react-icons/im";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { Typography } from "@mui/material";
 
 const TotalBusiness = () => {
+  
   const [requests, setRequests] = useState([]);
   const userId = localStorage.getItem("id");
   
@@ -60,15 +62,16 @@ const TotalBusiness = () => {
         <div className="row_boxes_inner" key={index}>
           <div className="first">
             <p className="number">{totalitems.number}</p>
-            <Link to={totalitems.link} className="title">
+            <Typography to={totalitems.link} className="title">
               {totalitems.title1}
-            </Link>
+            </Typography>
           </div>
           <div className="second">
             <totalitems.icon />
           </div>
         </div>
       ))}
+     
     </div>
   );
 };

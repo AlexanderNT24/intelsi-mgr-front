@@ -5,8 +5,7 @@ import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import CircularProgress from "@mui/material/CircularProgress";
 
-const UserDetail = () => {
-  const { id } = useParams();
+const UserDetail = ({id} ) => {
   console.log("UserDetail - ID:", id);
   const [user, setUser] = useState(null);
   const userId = localStorage.getItem("id");
