@@ -20,7 +20,7 @@ const LogisticDashboard = () => {
         const users = await response.json();
 
         // Filtrar usuarios con rol "logistica"
-        const logisticaUsers = users.filter(user => user.rol === 'logistica');
+        const logisticaUsers = users.filter(user => user.rol === 'supervisor');
         setLogisticaUsers(logisticaUsers);
       } catch (error) {
         console.error('Error al obtener usuarios:', error);

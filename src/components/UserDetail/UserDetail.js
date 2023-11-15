@@ -41,26 +41,17 @@ const UserDetail = () => {
   }
 
   return (
-    <div className="dashboard">
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Paper elevation={3} style={{ padding: "20px", marginTop: "20px" }}>
-            <Typography variant="h4">Detalles del Usuario</Typography>
-            <Typography variant="subtitle1">Nombre: {user.name}</Typography>
-            <Typography variant="subtitle1">
-              Primer Nombre: {user.first_name}
-            </Typography>
-            <Typography variant="subtitle1">
-              Apellido: {user.last_name}
-            </Typography>
-            <Typography variant="subtitle1">
-              Correo Electrónico: {user.email}
-            </Typography>
-            {/* Agrega más detalles según tus necesidades */}
-          </Paper>
-        </Grid>
-      </Grid>
-    </div>
+    <>
+      <Typography variant="h4">Detalles del Usuario</Typography>
+      <Typography variant="subtitle1">Nombre: {user.name}</Typography>
+      <Typography variant="subtitle1">
+        Primer Nombre: {user.first_name}
+      </Typography>
+      <Typography variant="subtitle1">Apellido: {user.last_name}</Typography>
+      <Typography variant="subtitle1">
+        Correo Electrónico: {user.email}
+      </Typography>
+    </>
   );
 };
 

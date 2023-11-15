@@ -1,133 +1,84 @@
-import React, { useState } from "react";
-import ReactDOM from "react-dom";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import Board, { moveCard } from "@lourenci/react-kanban";
 import "@lourenci/react-kanban/dist/styles.css";
+import { Container, Typography } from "@mui/material";
+import axios from "axios";
+import Paper from "@mui/material/Paper";
+import UserDetail from "../UserDetail/UserDetail";
 
-const board = {
-  columns: [
-    {
-      id: 1,
-      title: "Backlog",
-      backgroundColor: "#fff",
-      cards: [
-        {
-          id: 1,
-          title: "Card title 1",
-          description: "Card content"
-        },
-        {
-          id: 2,
-          title: "Card title 2",
-          description: "Card content"
-        },
-        {
-          id: 3,
-          title: "Card title 3",
-          description: "Card content"
-        }
-      ]
-    },
-    {
-      id: 2,
-      title: "Doing",
-      cards: [
-        {
-          id: 9,
-          title: "Card title 9",
-          description: "Card content"
-        }
-      ]
-    },
-    {
-      id: 3,
-      title: "Q&A",
-      cards: [
-        {
-          id: 10,
-          title: "Card title 10",
-          description: "Card content"
-        },
-        {
-          id: 11,
-          title: "Card title 11",
-          description: "Card content"
-        }
-      ]
-    },
-    {
-      id: 4,
-      title: "Production",
-      cards: [
-        {
-          id: 12,
-          title: "Card title 12",
-          description: "Card content"
-        },
-        {
-          id: 13,
-          title: "Card title 13",
-          description: "Card content"
-        }
-      ]
-    }
-  ]
+const ControlledBoardWithApi = () => {
+  const { id } = useParams();
+  const [controlledBoard, setControlledBoard] = useState(null);
+
+  useEffect(() => {
+    const fetchRequests = async () => {
+      try {
+        const response = await axios.get("http://localhost:3001/request/supervisor/"+id);
+        const filteredRequests = response.data.filter(request => request.requeststatus !== "enviado");
+        const mappedRequests = mapRequestsToColumns(filteredRequests);
+        setControlledBoard({ columns: Object.values(mappedRequests) });
+      } catch (error) {
+        console.error("Error fetching requests:", error);
+      }
+    };
+
+    fetchRequests();
+  }, []);
+
+  const mapRequestsToColumns = (requests) => {
+    const columnsMap = {
+      pendiente: "Pendiente",
+      listo: "Listo",
+      enviado: "Enviado",
+      
+    };
+
+    return requests.reduce((columns, request) => {
+      const columnName = columnsMap[request.requeststatus] || "Pendiente";
+      const columnIndex = Object.keys(columns).findIndex((col) => col === columnName);
+
+      if (columnIndex !== -1) {
+        columns[columnName].cards.push({
+          id: request.id,
+          title: `ID: ${request.id}`,
+          description: `Status: ${request.requeststatus}, Price: $${request.price}`,
+        });
+      }
+
+      return columns;
+    }, initialColumnState());
+  };
+
+  const initialColumnState = () => {
+    return {
+      Pendiente: { id: 1, title: "Pendiente", cards: [] },
+      Listo: { id: 3, title: "Listo", cards: [] },
+      Enviado: { id: 4, title: "Enviado", cards: [] },
+      // Ajusta más columnas según tus estados de solicitud
+    };
+  };
+
+  const handleCardMove = (_card, source, destination) => {
+    const updatedBoard = moveCard(controlledBoard, source, destination);
+    setControlledBoard(updatedBoard);
+  };
+
+  return (
+    <div className="dashboard">
+      <Paper elevation={3} style={{ padding: "20px", marginTop: "20px" }}>
+      <UserDetail></UserDetail>
+      {controlledBoard ? (
+        <Board onCardDragEnd={handleCardMove} disableColumnDrag>
+          {controlledBoard}
+        </Board>
+      ) : (
+        <Typography>Loading...</Typography>
+      )}
+      </Paper>
+     
+    </div>
+  );
 };
 
-const items = [];
-
-function ControlledBoard() {
-  // You need to control the state yourself.
-  const [controlledBoard, setBoard] = useState(board);
-
-  function handleCardMove(_card, source, destination) {
-    const updatedBoard = moveCard(controlledBoard, source, destination);
-    setBoard(updatedBoard);
-  }
-
-  return (
-    <Board onCardDragEnd={handleCardMove} disableColumnDrag>
-      {controlledBoard}
-    </Board>
-  );
-}
-
-function UncontrolledBoard() {
-  return (
-    <Board
-      allowRemoveLane
-      allowRenameColumn
-      allowRemoveCard
-      onLaneRemove={console.log}
-      onCardRemove={console.log}
-      onLaneRename={console.log}
-      initialBoard={board}
-      allowAddCard={{ on: "top" }}
-      onNewCardConfirm={(draftCard) => ({
-        id: new Date().getTime(),
-        ...draftCard
-      })}
-      onCardNew={console.log}
-    />
-  );
-}
-
-function App() {
-  return (
-    <>
-      {items.length && <div />}
-      
-      <h4>Example of an uncontrolled board</h4>
-      <UncontrolledBoard />
-      <h4>Example of a controlled board</h4>
-      <p>Just the card moving is implemented in this demo.</p>
-      <p>
-        In this kind of board, you can do whatever you want. We just mirror your
-        board state.
-      </p>
-      <ControlledBoard />
-    </>
-  );
-}
-
-const rootElement = document.getElementById("root");
-ReactDOM.render(<App />, rootElement);
+export default ControlledBoardWithApi;
