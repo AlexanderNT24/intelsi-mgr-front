@@ -14,17 +14,17 @@ const ControlledBoardWithApi = () => {
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/request/supervisor/"+id);
-        const filteredRequests = response.data.filter(request => request.requeststatus !== "enviado");
-        const mappedRequests = mapRequestsToColumns(filteredRequests);
+        const response = await axios.get("http://localhost:3001/request/supervisor/" + id);
+        const mappedRequests = mapRequestsToColumns(response.data);
         setControlledBoard({ columns: Object.values(mappedRequests) });
       } catch (error) {
         console.error("Error fetching requests:", error);
       }
     };
-
+  
     fetchRequests();
   }, []);
+  
 
   const mapRequestsToColumns = (requests) => {
     const columnsMap = {
@@ -42,7 +42,7 @@ const ControlledBoardWithApi = () => {
         columns[columnName].cards.push({
           id: request.id,
           title: `ID: ${request.id}`,
-          description: `Status: ${request.requeststatus}, Price: $${request.price}`,
+          description: `${request.comment} x ${request.price} ${request.size_unit}`,
         });
       }
 
@@ -55,14 +55,41 @@ const ControlledBoardWithApi = () => {
       Pendiente: { id: 1, title: "Pendiente", cards: [] },
       Listo: { id: 3, title: "Listo", cards: [] },
       Enviado: { id: 4, title: "Enviado", cards: [] },
-      // Ajusta más columnas según tus estados de solicitud
     };
   };
 
-  const handleCardMove = (_card, source, destination) => {
+  const handleCardMove = async (_card, source, destination) => {
     const updatedBoard = moveCard(controlledBoard, source, destination);
     setControlledBoard(updatedBoard);
+  
+    // Extraer el requestId y el nuevo requestStatus de las propiedades de la tarjeta
+    const requestId = _card.id;
+  
+    // Obtener la columna de destino de la tarjeta
+    const columnName = Object.keys(updatedBoard.columns).find(
+      (col) => updatedBoard.columns[col].cards.some((card) => card.id === requestId)
+    );
+  
+    const requestStatus = columnName ? columnName.toLowerCase() : 'pendiente'; 
+    console.log(requestStatus)
+    
+    let requestName;
+    if (requestStatus == 0) {
+      requestName = 'pendiente'; // Listo
+    } else if (requestStatus == 1) {
+      requestName = 'listo'; // Enviado
+    } else if (requestStatus == 2)  {
+      requestName = 'enviado';// Pendiente por defecto si no se encuentra ninguna columna
+    }
+    console.log(requestName)
+    try {
+      // Hacer la llamada a la API para actualizar el estado
+      await axios.patch(`http://localhost:3001/request/${requestId}/status`, { requestName });
+    } catch (error) {
+      console.error('Error al actualizar el estado de la solicitud:', error);
+    }
   };
+  
 
   return (
     <div className="dashboard">
